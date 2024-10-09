@@ -12,12 +12,13 @@ import SwiftUI
 /// Functional programming is about behavior
 ///
 struct ContentView: View {
+    let emojis = ["👑", "🪙", "💂🏻‍♂️", "💎"]
+    
     var body: some View {
         HStack {
-            CardView(isFaceUp: true)
-            CardView()
-            CardView()
-            CardView()
+            ForEach(emojis.indices, id: \.self) { index in
+                CardView(content: emojis[index])
+            }
         }
         .foregroundColor(.blue)
         .padding()
@@ -25,7 +26,8 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    @State var isFaceUp = false
+    let content: String
+    @State var isFaceUp = true
     
     var body: some View {
         ZStack {
