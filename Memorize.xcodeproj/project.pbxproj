@@ -49,10 +49,10 @@
 		CA6DBFE42CCB1C0A00CBF69D /* View */ = {
 			isa = PBXGroup;
 			children = (
+				CA8FF0C92CB4C48200B96F99 /* EmojiMemoryGameView.swift */,
 				CAF06D8C2CC817020002C27A /* AspectVGrid.swift */,
 				CA6DBFE02CCAC6C800CBF69D /* CardView.swift */,
 				CA6DBFE22CCB1BF000CBF69D /* Pie.swift */,
-				CA8FF0C92CB4C48200B96F99 /* EmojiMemoryGameView.swift */,
 				CA6DBFE72CCB32C000CBF69D /* Cardify.swift */,
 			);
 			path = View;

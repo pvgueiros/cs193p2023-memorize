@@ -45,9 +45,6 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                     } else { // mismatch
                         if cards[chosenIndex].hasBeenSeen { updateScore(by: -1) }
                         if cards[potentialIndex].hasBeenSeen { updateScore(by: -1) }
-                        
-                        cards[chosenIndex].hasBeenSeen = true
-                        cards[potentialIndex].hasBeenSeen = true
                     }
                 } else {
                     indexOfOnlyFaceUpCard = chosenIndex
@@ -63,7 +60,13 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     }
     
     struct Card: Equatable, Identifiable, CustomDebugStringConvertible {
-        var isFaceUp = false
+        var isFaceUp = false {
+            didSet {
+                if oldValue && !isFaceUp {
+                    hasBeenSeen = true
+                }
+            }
+        }
         var isMatched = false
         var hasBeenSeen = false
         let content: CardContent

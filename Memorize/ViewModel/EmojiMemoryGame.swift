@@ -11,7 +11,7 @@ class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
     
     @Published private(set) var theme = EmojiMemoryGameTheme.themes.first!
-    @Published private var model = MemoryGame<String>()
+    @Published private var game = MemoryGame<String>()
     
     private let colorForString: [String: Color] = [
         "green": .green,
@@ -27,11 +27,11 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     var cards: Array<Card> {
-        model.cards
+        game.cards
     }
     
     var score: Int {
-        model.score
+        game.score
     }
     
     var themeColor: Color {
@@ -48,7 +48,7 @@ class EmojiMemoryGame: ObservableObject {
         guard let randomTheme = EmojiMemoryGameTheme.themes.randomElement() else { return }
         let shuffledEmojis = randomTheme.emojis.shuffled()
         
-        self.model = MemoryGame(numberOfPairsOfCards: randomTheme.numberOfPairs) { pairIndex in
+        self.game = MemoryGame(numberOfPairsOfCards: randomTheme.numberOfPairs) { pairIndex in
             if shuffledEmojis.indices.contains(pairIndex) {
                 return shuffledEmojis[pairIndex]
             } else {
@@ -59,6 +59,6 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     func choose(_ card: Card) {
-        model.choose(card)
+        game.choose(card)
     }
 }

@@ -29,19 +29,35 @@ struct CardView: View {
     }
     
     var body: some View {
-        Pie(endAngle: .degrees(140))
-            .opacity(Constant.Pie.opacity)
+        pieView
             .overlay(
-                Text(card.content)
-                    .font(.system(size: Constant.FontSize.largest))
-                    .minimumScaleFactor(Constant.FontSize.scaleFactor)
-                    .multilineTextAlignment(.center)
-                    .aspectRatio(1, contentMode: .fit)
+                contentView
                     .padding(Constant.inset)
             )
             .padding(Constant.inset)
             .cardify(isFaceUp: card.isFaceUp)
             .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
+    }
+    
+    var pieView: some View {
+        Pie(endAngle: .degrees(140))
+            .opacity(Constant.Pie.opacity)
+    }
+    
+    var contentView: some View {
+        Text(card.content)
+            .font(.system(size: Constant.FontSize.largest))
+            .minimumScaleFactor(Constant.FontSize.scaleFactor)
+            .multilineTextAlignment(.center)
+            .aspectRatio(1, contentMode: .fit)
+            .rotationEffect(.degrees(card.isMatched ? 0 : 360))
+            .animation(.spin(duration: 1), value: card.isMatched)
+    }
+}
+
+extension Animation {
+    static func spin(duration: TimeInterval) -> Animation {
+        .linear(duration: duration).repeatForever(autoreverses: false)
     }
 }
 

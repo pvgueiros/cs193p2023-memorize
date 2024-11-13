@@ -12,6 +12,7 @@ import SwiftUI
 /// Functional programming is about behavior
 ///
 struct EmojiMemoryGameView: View {
+    typealias Card = MemoryGame<String>.Card
     
     private struct Constant {
         static let aspectRatio: CGFloat = 2/3
@@ -27,8 +28,7 @@ struct EmojiMemoryGameView: View {
             Text("Theme: \(viewModel.themeTitle)")
                 .font(.title)
             cards
-                .animation(.default, value: viewModel.cards)
-            footerView
+            footer
         }
         .foregroundStyle(viewModel.themeColor)
         .padding()
@@ -39,25 +39,38 @@ struct EmojiMemoryGameView: View {
             CardView(card)
                 .padding(Constant.inset)
                 .onTapGesture {
-                    viewModel.choose(card)
+                    withAnimation {
+                        viewModel.choose(card)
+                    }
                 }
         }
     }
     
-    var footerView: some View {
+    var footer: some View {
         HStack {
-            Text("Score: \(viewModel.score)")
+            score
             Spacer()
-            Button("New Game") {
-                viewModel.createNewGame()
-            }
-            .padding()
-            .cornerRadius(Constant.cornerRadius)
-            .overlay(RoundedRectangle(cornerRadius: Constant.cornerRadius)
-                .stroke(viewModel.themeColor, lineWidth: Constant.lineWidth))
+            newGameButton
         }
         .padding(Constant.inset)
         .font(.title2)
+    }
+    
+    var score: some View {
+        Text("Score: \(viewModel.score)")
+            .animation(nil)
+    }
+    
+    var newGameButton: some View {
+        Button("New Game") {
+            withAnimation {
+                viewModel.createNewGame()
+            }
+        }
+        .padding()
+        .cornerRadius(Constant.cornerRadius)
+        .overlay(RoundedRectangle(cornerRadius: Constant.cornerRadius)
+            .stroke(viewModel.themeColor, lineWidth: Constant.lineWidth))
     }
 }
 
