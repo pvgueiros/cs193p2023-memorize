@@ -21,6 +21,7 @@ struct EmojiMemoryGameView: View {
         static let lineWidth: CGFloat = 3
     }
     
+    
     @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
