@@ -20,6 +20,15 @@ struct CardView: View {
         struct Pie {
             static let opacity: Double = 0.3
         }
+        struct Opacity {
+            static let opaque: Double = 1
+            static let transparent: Double = 0
+        }
+        struct Rotation {
+            static let initialAngle: Double = 0
+            static let finalAngle: Double = 360
+            static let duration: Double = 2
+        }
     }
     
     let card: Card
@@ -36,7 +45,7 @@ struct CardView: View {
             )
             .padding(Constant.inset)
             .cardify(isFaceUp: card.isFaceUp)
-            .opacity(card.isFaceUp || !card.isMatched ? 1 : 0)
+            .opacity(card.isFaceUp || !card.isMatched ? Constant.Opacity.opaque : Constant.Opacity.transparent)
     }
     
     var pieView: some View {
@@ -50,8 +59,8 @@ struct CardView: View {
             .minimumScaleFactor(Constant.FontSize.scaleFactor)
             .multilineTextAlignment(.center)
             .aspectRatio(1, contentMode: .fit)
-            .rotationEffect(.degrees(card.isMatched ? 0 : 360))
-            .animation(.spin(duration: 1), value: card.isMatched)
+            .rotationEffect(.degrees(card.isMatched ? Constant.Rotation.finalAngle : Constant.Rotation.initialAngle))
+            .animation(.spin(duration: Constant.Rotation.duration), value: card.isMatched)
     }
 }
 

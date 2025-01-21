@@ -48,3 +48,9 @@ extension View {
         modifier(Cardify(isFaceUp: isFaceUp))
     }
 }
+
+#Preview {
+    Text("👑")
+        .cardify(isFaceUp: true)
+        .padding()
+}

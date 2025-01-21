@@ -21,7 +21,6 @@ struct EmojiMemoryGameView: View {
         static let lineWidth: CGFloat = 3
     }
     
-    
     @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
@@ -39,12 +38,17 @@ struct EmojiMemoryGameView: View {
         AspectVGrid(viewModel.cards, aspectRatio: Constant.aspectRatio) { card in
             CardView(card)
                 .padding(Constant.inset)
+                .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
                 .onTapGesture {
                     withAnimation {
                         viewModel.choose(card)
                     }
                 }
         }
+    }
+    
+    private func scoreChange(causedBy card: Card) -> Int {
+        return 0
     }
     
     var footer: some View {
