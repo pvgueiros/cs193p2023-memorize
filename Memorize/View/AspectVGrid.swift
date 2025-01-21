@@ -12,7 +12,7 @@ struct AspectVGrid<Item: Identifiable, ItemView: View>: View {
     let aspectRatio: CGFloat
     let content: (Item) -> ItemView
     
-    init(_ cards: [Item], aspectRatio: CGFloat, cardBuilder: @escaping (Item) -> ItemView) {
+    init(_ cards: [Item], aspectRatio: CGFloat, @ViewBuilder cardBuilder: @escaping (Item) -> ItemView) {
         self.items = cards
         self.aspectRatio = aspectRatio
         self.content = cardBuilder

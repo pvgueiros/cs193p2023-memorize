@@ -12,22 +12,21 @@ struct CardView: View {
     
     private struct Constant {
         static let inset: CGFloat = 5
+        
         struct FontSize {
             static let largest: CGFloat = 200
             static let smallest: CGFloat = 10
             static let scaleFactor = smallest / largest
         }
+        
         struct Pie {
             static let opacity: Double = 0.3
         }
-        struct Opacity {
-            static let opaque: Double = 1
-            static let transparent: Double = 0
-        }
+        
         struct Rotation {
             static let initialAngle: Double = 0
             static let finalAngle: Double = 360
-            static let duration: Double = 2
+            static let duration: Double = 1
         }
     }
     
@@ -38,18 +37,24 @@ struct CardView: View {
     }
     
     var body: some View {
-        pieView
-            .overlay(
-                contentView
+        TimelineView(.animation) { timeline in
+            if card.isFaceUp || !card.isMatched {
+                pieView
+                    .overlay(
+                        contentView
+                            .padding(Constant.inset)
+                    )
                     .padding(Constant.inset)
-            )
-            .padding(Constant.inset)
-            .cardify(isFaceUp: card.isFaceUp)
-            .opacity(card.isFaceUp || !card.isMatched ? Constant.Opacity.opaque : Constant.Opacity.transparent)
+                    .cardify(isFaceUp: card.isFaceUp)
+                    .transition(.scale)
+            } else {
+                Color.clear
+            }
+        }
     }
     
     var pieView: some View {
-        Pie(endAngle: .degrees(140))
+        Pie(endAngle: .degrees(card.bonusPercentRemaining * 360))
             .opacity(Constant.Pie.opacity)
     }
     
@@ -59,7 +64,9 @@ struct CardView: View {
             .minimumScaleFactor(Constant.FontSize.scaleFactor)
             .multilineTextAlignment(.center)
             .aspectRatio(1, contentMode: .fit)
-            .rotationEffect(.degrees(card.isMatched ? Constant.Rotation.finalAngle : Constant.Rotation.initialAngle))
+            .rotationEffect(.degrees(card.isMatched
+                                     ? Constant.Rotation.finalAngle
+                                     : Constant.Rotation.initialAngle))
             .animation(.spin(duration: Constant.Rotation.duration), value: card.isMatched)
     }
 }
