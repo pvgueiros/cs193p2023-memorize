@@ -54,7 +54,7 @@ struct CardView: View {
     }
     
     var pieView: some View {
-        Pie(endAngle: .degrees(card.bonusPercentRemaining * 360))
+        Pie(endAngle: .degrees(-card.bonusPercentRemaining * 360))
             .opacity(Constant.Pie.opacity)
     }
     

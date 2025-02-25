@@ -39,7 +39,7 @@ struct Cardify: ViewModifier, Animatable {
             baseRectangle.fill()
                 .opacity(isFaceUp ? 0 : 1)
         }
-        .rotation3DEffect(.degrees(rotation), axis: (0, 1, 0))
+        .rotation3DEffect(.degrees(rotation), axis: (0, -1, 0))
     }
 }
 

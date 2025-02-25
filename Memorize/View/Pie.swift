@@ -11,7 +11,7 @@ import CoreGraphics
 struct Pie: Shape {
     var startAngle: Angle = Angle.zero
     let endAngle: Angle
-    var clockwise = true
+    var clockwise = false
     
     func path(in rect: CGRect) -> Path {
         let startAngle = startAngle - .degrees(90)
