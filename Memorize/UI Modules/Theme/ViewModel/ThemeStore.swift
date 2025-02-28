@@ -10,12 +10,18 @@ import SwiftUI
 
 class ThemeStore: ObservableObject {
     
-    @Published private(set) var themes: [Theme] = []
+    @Published private(set) var themePresenters: [ThemePresenter] = []
     
     init() {
-        if themes.isEmpty {
-            themes = Theme.builtins
-            print(Color.green.toHex())
+        if themePresenters.isEmpty {
+            let themes = Theme.builtins
+            for theme in themes {
+                themePresenters.append(ThemePresenter(theme: theme))
+            }
         }
+    }
+    
+    func presenter(for theme: Theme) -> ThemePresenter? {
+        themePresenters.first(where: { $0.theme.id == theme.id })
     }
 }

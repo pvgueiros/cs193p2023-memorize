@@ -7,42 +7,40 @@
 
 import Foundation
 
-struct Theme: Identifiable {
+struct Theme: Identifiable, Hashable {
     var title: String
     var emojis: String
     var numberOfPairs: Int
-    var colorHex: String
+    var colorRGBA: RGBA
     var id: UUID = UUID()
-    
-#warning("make emoji count different for each theme")
     
     static var builtins: [Theme] = [
         Theme(title: "Nature",
-              emojis: "🌸☀️🌳💫🌲🍀🌊☔️🐳🐸",
-              colorHex: "#34C759"),
+              emojis: "🌱🌴🌷🍁🍄🦋🌻🐝🐘🦚🪺🪻🪼🏝️🐻‍❄️❄️🌹🦕🦖",
+              colorRGBA: RGBA(red: 52/255, green: 199/255, blue: 89/255, alpha: 1)),
         Theme(title: "Office",
-              emojis: "🖊️📌📒📊✂️📐✏️📤📎💼",
-              colorHex: "#000000"),
+              emojis: "🖊️📌📒📊✂️📐✏️📤📎💼📁📃📅📍🗃️🖇️🗂️",
+              colorRGBA: RGBA(red: 0/255, green: 0/255, blue: 0/255, alpha: 1)),
         Theme(title: "Fashion",
-              emojis: "👑🧣👚🩳🧦🧢👗👖🩱👔",
-              colorHex: "#AF52DE"),
+              emojis: "👑🧣👚🩳🧦🧢👗👖🩱👔🧥🩲👕👙👒",
+              colorRGBA: RGBA(red: 175/255, green: 82/255, blue: 222/255, alpha: 1)),
         Theme(title: "Party",
-              emojis: "🎉🎈🧁🥳🍾🎁🪅🎂🪩👏🏼",
-              colorHex: "#FF2D55"),
+              emojis: "🎉🎈🧁🥳🍾🎁🎂🪩👏🏼🍻🍹🍷",
+              colorRGBA: RGBA(red: 255/255, green: 45/255, blue: 85/255, alpha: 1)),
         Theme(title: "Sports",
-              emojis: "🏓🥊🏇🏼🚴🏻‍♀️🏂🏀🏋🏻‍♀️🏐🏄🏻‍♀️⛳️",
-              colorHex: "#FF9500"),
+              emojis: "🏌🏽‍♀️🤾🏻🤾🏽🚴🏻‍♀️⛹🏻‍♀️🏄🏽‍♀️🏋🏻‍♀️🏊🏼‍♀️🥅🏈⚽️🥊🏀🏂⛸️🥍🏹",
+              colorRGBA: RGBA(red: 255/255, green: 149/255, blue: 0/255, alpha: 1)),
         Theme(title: "Transportation",
-              emojis: "🚙🚜🚲🚠✈️🚂🚁🚤🚢🚀",
-              colorHex: "#007AFF")
+              emojis: "🚙🚜🚲🚠✈️🚂🚁🚤🚢🚀⛽️🛻🛵🚏💺🏍️🛰️",
+              colorRGBA: RGBA(red: 0/255, green: 122/255, blue: 255/255, alpha: 1))
     ]
     
     static private let minPairsOfCards: Int = 4
     
-    init(title: String, emojis: String, colorHex: String) {
+    init(title: String, emojis: String, colorRGBA: RGBA) {
         self.title = title
         self.emojis = emojis
         self.numberOfPairs = Int.random(in: Self.minPairsOfCards...emojis.count)
-        self.colorHex = colorHex
+        self.colorRGBA = colorRGBA
     }
 }

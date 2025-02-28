@@ -37,7 +37,7 @@ struct EmojiMemoryGameView: View {
     
     var body: some View {
         VStack {
-            Text("Theme: \(viewModel.themeTitle)")
+            Text(viewModel.themeTitle)
                 .font(.system(size: Constant.Font.title))
             cards
             footer
@@ -146,5 +146,6 @@ struct EmojiMemoryGameView: View {
 }
 
 #Preview {
-    EmojiMemoryGameView(viewModel: EmojiMemoryGame())
+    let previewTheme = Theme(title: "Hello World", emojis: "🗺️🌎🌍🌏", colorRGBA: RGBA(red: 255/255, green: 45/255, blue: 85/255, alpha: 1))
+    EmojiMemoryGameView(viewModel: EmojiMemoryGame(themePresenter: ThemePresenter(theme: previewTheme)))
 }
