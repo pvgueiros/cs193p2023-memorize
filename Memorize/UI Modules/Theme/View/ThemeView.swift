@@ -11,8 +11,18 @@ struct ThemeView: View {
     
     @Binding var presenter: ThemePresenter
     
+    enum Focused {
+        case title
+    }
+    @FocusState private var focused: Focused?
+
     var body: some View {
-        Text("Hello, World!")
+        Form {
+            Section(header: Text("Title")) {
+                TextField("Title", text: $presenter.theme.title)
+                    .focused($focused, equals: .title)
+            }
+        }
     }
 }
 

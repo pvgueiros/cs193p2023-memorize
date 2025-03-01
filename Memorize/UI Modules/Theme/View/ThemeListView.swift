@@ -12,7 +12,11 @@ struct ThemeListView: View {
     
     @ObservedObject var store: ThemeStore
     @State var showThemeView: Bool = false
-    @State var selectedThemeId: Theme.ID?
+    @State private var selectedThemePresenter: ThemePresenter? {
+        didSet {
+            showThemeView = selectedThemePresenter != nil
+        }
+    }
     
     // TODO: - separate views into smaller vars/funcs
     
@@ -31,9 +35,8 @@ struct ThemeListView: View {
                     }
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
-                            selectedThemeId = themePresenter.id
-                            print("Selected theme id: " + (selectedThemeId?.uuidString ?? "nil"))
-                            showThemeView = true
+                            selectedThemePresenter = themePresenter
+                            print("Selected theme: \(selectedThemePresenter?.title ?? "nil")")
                         } label: {
                             Image(systemName: "info.circle.fill")
                         }
@@ -51,6 +54,7 @@ struct ThemeListView: View {
 //            .toolbar {
 //                Button {
 //                    // add theme
+//                    // delect added theme
 //                } label: {
 //                    Image(systemName: "plus")
 //                }
@@ -59,15 +63,14 @@ struct ThemeListView: View {
                 let gameViewModel = EmojiMemoryGame(themePresenter: ThemePresenter(theme: theme))
                 EmojiMemoryGameView(viewModel: gameViewModel)
             }
-            .sheet(isPresented: $showThemeView) {
-                if let selectedThemeId, let index = store.indexOfThemePresenter(withId: selectedThemeId) {
+            .sheet(item: $selectedThemePresenter) { themePresenter in
+                if let index = store.indexOf(themePresenter: themePresenter) {
                     ThemeView(presenter: $store.themePresenters[index])
                 }
             }
             .navigationTitle("Theme List")
         } detail: { }
     }
-    
 }
 
 //#Preview {

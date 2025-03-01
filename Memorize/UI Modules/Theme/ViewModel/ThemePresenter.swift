@@ -10,7 +10,8 @@ import SwiftUI
 
 class ThemePresenter: Identifiable, Codable, ObservableObject {
 
-    private(set) var theme: Theme
+    var theme: Theme
+    var id: Theme.ID { theme.id }
     
     init(theme: Theme) {
         self.theme = theme
@@ -22,10 +23,6 @@ class ThemePresenter: Identifiable, Codable, ObservableObject {
     
     var title: String {
         theme.title
-    }
-    
-    var id: Theme.ID {
-        theme.id
     }
     
     var subtitle: String {

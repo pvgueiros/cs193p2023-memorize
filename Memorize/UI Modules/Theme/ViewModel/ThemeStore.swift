@@ -36,6 +36,10 @@ class ThemeStore: ObservableObject {
     func indexOfThemePresenter(withId id: Theme.ID) -> Int? {
         themePresenters.firstIndex { $0.id == id }
     }
+    
+    func indexOf(themePresenter: ThemePresenter) -> Int? {
+        themePresenters.firstIndex { $0 == themePresenter }
+    }
 }
 
 extension UserDefaults {
