@@ -8,10 +8,9 @@
 import Foundation
 import SwiftUI
 
-class ThemePresenter: Identifiable {
-    
+class ThemePresenter: Identifiable, Codable, ObservableObject {
+
     private(set) var theme: Theme
-    var id: Theme.ID { theme.id }
     
     init(theme: Theme) {
         self.theme = theme
@@ -25,9 +24,19 @@ class ThemePresenter: Identifiable {
         theme.title
     }
     
+    var id: Theme.ID {
+        theme.id
+    }
+    
     var subtitle: String {
         let numberOfPairs = theme.numberOfPairs
         let numberOfPairsTitle = (numberOfPairs == theme.emojis.count) ? "All" : "\(numberOfPairs)"
         return numberOfPairsTitle + " pairs from \(theme.emojis)"
+    }
+}
+
+extension ThemePresenter: Equatable {
+    static func == (lhs: ThemePresenter, rhs: ThemePresenter) -> Bool {
+        lhs.id == rhs.id
     }
 }
