@@ -34,6 +34,8 @@ class ThemeStore: ObservableObject {
         }
     }
     
+    // MARK: - Read-only Methods
+    
     func colorFor(_ theme: Theme) -> Color {
         Color(rgba: theme.colorRGBA)
     }
@@ -52,12 +54,22 @@ class ThemeStore: ObservableObject {
         themes.firstIndex { $0.id == theme.id }
     }
     
-    // MARK: - Modifying List
+    func canRemoveEmoji(from theme: Theme) -> Bool {
+        theme.emojis.uniqued.count > Theme.minPairsOfCards
+    }
+    
+    // MARK: - Mutating Methods
     
     func addTheme() -> Theme {
         let newTheme = Theme.defaultNewTheme
         themes.append(newTheme)
         return newTheme
+    }
+    
+    func setColor(_ color: Color, for theme: Theme) {
+        if let index = indexOf(theme) {
+            themes[index].colorRGBA = color.rgba
+        }
     }
 }
 

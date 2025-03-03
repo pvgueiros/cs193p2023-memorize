@@ -23,6 +23,7 @@
 		CA8FF0CC2CB4C48500B96F99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA8FF0CB2CB4C48500B96F99 /* Assets.xcassets */; };
 		CA8FF0CF2CB4C48500B96F99 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CA8FF0CE2CB4C48500B96F99 /* Preview Assets.xcassets */; };
 		CAACDDF42D3F50AF000D68C5 /* FlyingNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAACDDF32D3F50AF000D68C5 /* FlyingNumber.swift */; };
+		CAEAD0AE2D7634E600FCED20 /* SimpleAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAEAD0AD2D7634E600FCED20 /* SimpleAlert.swift */; };
 		CAF06D8D2CC817020002C27A /* AspectVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAF06D8C2CC817020002C27A /* AspectVGrid.swift */; };
 /* End PBXBuildFile section */
 
@@ -44,6 +45,7 @@
 		CA8FF0CB2CB4C48500B96F99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CA8FF0CE2CB4C48500B96F99 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CAACDDF32D3F50AF000D68C5 /* FlyingNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlyingNumber.swift; sourceTree = "<group>"; };
+		CAEAD0AD2D7634E600FCED20 /* SimpleAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleAlert.swift; sourceTree = "<group>"; };
 		CAF06D8C2CC817020002C27A /* AspectVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AspectVGrid.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -172,6 +174,7 @@
 				CA8FF0C72CB4C48200B96F99 /* MemorizeApp.swift */,
 				CA7F491D2D6E898D00AD49FD /* UI Modules */,
 				CA7F49272D6EB91000AD49FD /* Data Helpers */,
+				CAEAD0AC2D7634CF00FCED20 /* Custom */,
 				CA8FF0CB2CB4C48500B96F99 /* Assets.xcassets */,
 				CA8FF0CD2CB4C48500B96F99 /* Preview Content */,
 			);
@@ -184,6 +187,14 @@
 				CA8FF0CE2CB4C48500B96F99 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CAEAD0AC2D7634CF00FCED20 /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				CAEAD0AD2D7634E600FCED20 /* SimpleAlert.swift */,
+			);
+			path = Custom;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -270,6 +281,7 @@
 				CA7F49242D6E8D1B00AD49FD /* Theme.swift in Sources */,
 				CA2F73922CB6D1CE00EB81AC /* MemoryGame.swift in Sources */,
 				CAACDDF42D3F50AF000D68C5 /* FlyingNumber.swift in Sources */,
+				CAEAD0AE2D7634E600FCED20 /* SimpleAlert.swift in Sources */,
 				CA7F49292D6EB92400AD49FD /* UI Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
