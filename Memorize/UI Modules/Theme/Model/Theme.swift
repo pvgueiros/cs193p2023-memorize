@@ -14,6 +14,23 @@ struct Theme: Identifiable, Hashable, Codable {
     var colorRGBA: RGBA
     var id: UUID = UUID()
     
+    init(title: String, emojis: String, colorRGBA: RGBA) {
+        self.title = title
+        self.emojis = emojis
+        self.numberOfPairs = Int.random(in: Self.minPairsOfCards...emojis.count)
+        self.colorRGBA = colorRGBA
+    }
+    
+    static let minPairsOfCards: Int = 4
+    
+    static var defaultNewTheme: Theme {
+        Theme(
+            title: "Hello, World!",
+            emojis: "🗺️🌎🌍🌏",
+            colorRGBA: RGBA(red: 0/255, green: 200/255, blue: 100/255, alpha: 1)
+        )
+    }
+    
     static var builtins: [Theme] = [
         Theme(title: "Nature",
               emojis: "🌱🌴🌷🍁🍄🦋🌻🐝🐘🦚🪺🪻🪼🏝️🐻‍❄️❄️🌹🦕🦖",
@@ -34,13 +51,4 @@ struct Theme: Identifiable, Hashable, Codable {
               emojis: "🚙🚜🚲🚠✈️🚂🚁🚤🚢🚀⛽️🛻🛵🚏💺🏍️🛰️",
               colorRGBA: RGBA(red: 0/255, green: 122/255, blue: 255/255, alpha: 1))
     ]
-    
-    static let minPairsOfCards: Int = 4
-    
-    init(title: String, emojis: String, colorRGBA: RGBA) {
-        self.title = title
-        self.emojis = emojis
-        self.numberOfPairs = Int.random(in: Self.minPairsOfCards...emojis.count)
-        self.colorRGBA = colorRGBA
-    }
 }

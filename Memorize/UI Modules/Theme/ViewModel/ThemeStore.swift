@@ -5,14 +5,16 @@
 //  Created by Paula Vasconcelos Gueiros on 25/02/25.
 //
 
+// TODO: - check if makes sense that themes are accessed directly freely
+// TODO: - add access control
+// TODO: - add section marks
+
 import Foundation
 import SwiftUI
 
 class ThemeStore: ObservableObject {
     
     let userDefaultsKey = "ThemeStore"
-    
-    // TODO: - change themes so they can't be accessed directly - only through VM
     
     var themes: [Theme] {
         get {
@@ -48,6 +50,14 @@ class ThemeStore: ObservableObject {
     
     func indexOf(_ theme: Theme) -> Int? {
         themes.firstIndex { $0.id == theme.id }
+    }
+    
+    // MARK: - Modifying List
+    
+    func addTheme() -> Theme {
+        let newTheme = Theme.defaultNewTheme
+        themes.append(newTheme)
+        return newTheme
     }
 }
 

@@ -5,6 +5,14 @@
 //  Created by Paula Vasconcelos Gueiros on 25/02/25.
 //
 
+// TODO: - separate views into smaller vars/funcs
+// TODO: - add access control
+// TODO: - add section marks
+// TODO: - review constants
+// TODO: - consider changing selectedTheme to selectedThemeId
+// TODO: - consider switching to List(selection:
+// TODO: - add message when no selection
+
 import SwiftUI
 
 struct ThemeListView: View {
@@ -17,8 +25,6 @@ struct ThemeListView: View {
             showThemeView = selectedTheme != nil
         }
     }
-    
-    // TODO: - separate views into smaller vars/funcs
     
     var body: some View {
         NavigationSplitView {
@@ -36,7 +42,6 @@ struct ThemeListView: View {
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
                             selectedTheme = theme
-                            print("Selected theme: \(selectedTheme?.title ?? "nil")")
                         } label: {
                             Image(systemName: "info.circle.fill")
                         }
@@ -51,14 +56,13 @@ struct ThemeListView: View {
                 }
                 
             }
-//            .toolbar {
-//                Button {
-//                    // add theme
-//                    // delect added theme
-//                } label: {
-//                    Image(systemName: "plus")
-//                }
-//            }
+            .toolbar {
+                Button {
+                    selectedTheme = store.addTheme()
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
             .navigationDestination(for: Theme.self) { theme in
                 let gameViewModel = EmojiMemoryGame(theme)
                 EmojiMemoryGameView(viewModel: gameViewModel)
