@@ -20,6 +20,10 @@ extension String {
             }
         }
     }
+    
+    mutating func removeAll(_ ch: Character) {
+        removeAll(where: { $0 == ch })
+    }
 }
 
 extension Character {

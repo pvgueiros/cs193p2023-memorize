@@ -34,6 +34,7 @@ struct EmojiMemoryGameView: View {
     }
     
     @ObservedObject var viewModel: EmojiMemoryGame
+    @EnvironmentObject var themeStore: ThemeStore
     
     var body: some View {
         VStack {
@@ -42,7 +43,7 @@ struct EmojiMemoryGameView: View {
             cards
             footer
         }
-        .foregroundStyle(viewModel.themeColor)
+        .foregroundStyle(themeStore.colorFor(viewModel.theme))
         .padding()
     }
     
@@ -141,11 +142,11 @@ struct EmojiMemoryGameView: View {
         .padding()
         .cornerRadius(Constant.cornerRadius)
         .overlay(RoundedRectangle(cornerRadius: Constant.cornerRadius)
-            .stroke(viewModel.themeColor, lineWidth: Constant.lineWidth))
+            .stroke(themeStore.colorFor(viewModel.theme), lineWidth: Constant.lineWidth))
     }
 }
 
 #Preview {
     let previewTheme = Theme(title: "Hello World", emojis: "🗺️🌎🌍🌏", colorRGBA: RGBA(red: 255/255, green: 45/255, blue: 85/255, alpha: 1))
-    EmojiMemoryGameView(viewModel: EmojiMemoryGame(themePresenter: ThemePresenter(theme: previewTheme)))
+    EmojiMemoryGameView(viewModel: EmojiMemoryGame(previewTheme))
 }

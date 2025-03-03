@@ -10,11 +10,11 @@ import SwiftUI
 struct ThemeListView: View {
     private let listItemSpacing: CGFloat = 5
     
-    @ObservedObject var store: ThemeStore
+    @EnvironmentObject var store: ThemeStore
     @State var showThemeView: Bool = false
-    @State private var selectedThemePresenter: ThemePresenter? {
+    @State private var selectedTheme: Theme? {
         didSet {
-            showThemeView = selectedThemePresenter != nil
+            showThemeView = selectedTheme != nil
         }
     }
     
@@ -23,20 +23,20 @@ struct ThemeListView: View {
     var body: some View {
         NavigationSplitView {
             List {
-                ForEach(store.themePresenters) { themePresenter in
-                    NavigationLink(value: themePresenter.theme) {
+                ForEach(store.themes) { theme in
+                    NavigationLink(value: theme) {
                         VStack(alignment: .leading, spacing: listItemSpacing) {
-                            Text(themePresenter.title)
+                            Text(store.titleFor(theme))
                                 .font(.title)
-                                .foregroundStyle(themePresenter.color)
-                            Text(themePresenter.subtitle)
+                                .foregroundStyle(store.colorFor(theme))
+                            Text(store.subtitleFor(theme))
                                 .lineLimit(1)
                         }
                     }
                     .swipeActions(edge: .leading, allowsFullSwipe: true) {
                         Button {
-                            selectedThemePresenter = themePresenter
-                            print("Selected theme: \(selectedThemePresenter?.title ?? "nil")")
+                            selectedTheme = theme
+                            print("Selected theme: \(selectedTheme?.title ?? "nil")")
                         } label: {
                             Image(systemName: "info.circle.fill")
                         }
@@ -44,10 +44,10 @@ struct ThemeListView: View {
                     }
                 }
                 .onDelete { indexSet in
-                    store.themePresenters.remove(atOffsets: indexSet)
+                    store.themes.remove(atOffsets: indexSet)
                 }
                 .onMove { indexSet, offset in
-                    store.themePresenters.move(fromOffsets: indexSet, toOffset: offset)
+                    store.themes.move(fromOffsets: indexSet, toOffset: offset)
                 }
                 
             }
@@ -60,12 +60,12 @@ struct ThemeListView: View {
 //                }
 //            }
             .navigationDestination(for: Theme.self) { theme in
-                let gameViewModel = EmojiMemoryGame(themePresenter: ThemePresenter(theme: theme))
+                let gameViewModel = EmojiMemoryGame(theme)
                 EmojiMemoryGameView(viewModel: gameViewModel)
             }
-            .sheet(item: $selectedThemePresenter) { themePresenter in
-                if let index = store.indexOf(themePresenter: themePresenter) {
-                    ThemeView(presenter: $store.themePresenters[index])
+            .sheet(item: $selectedTheme) { theme in
+                if let index = store.indexOf(theme) {
+                    ThemeView(theme: $store.themes[index])
                 }
             }
             .navigationTitle("Theme List")

@@ -10,11 +10,11 @@ import SwiftUI
 class EmojiMemoryGame: ObservableObject {
     typealias Card = MemoryGame<String>.Card
     
-    var themePresenter: ThemePresenter
+    private(set) var theme: Theme
     @Published private var game = MemoryGame<String>()
     
-    init(themePresenter: ThemePresenter) {
-        self.themePresenter = themePresenter
+    init(_ theme: Theme) {
+        self.theme = theme
         createNewGame()
     }
     
@@ -27,19 +27,15 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     var themeTitle: String {
-        themePresenter.title
-    }
-    
-    var themeColor: Color {
-        themePresenter.color
+        theme.title
     }
     
     // MARK: - Intents
     
     func createNewGame() {
-        let shuffledEmojis = themePresenter.theme.emojis.uniqued.map(String.init).shuffled()
+        let shuffledEmojis = theme.emojis.uniqued.map(String.init).shuffled()
         
-        self.game = MemoryGame(numberOfPairsOfCards: themePresenter.theme.numberOfPairs) { pairIndex in
+        self.game = MemoryGame(numberOfPairsOfCards: theme.numberOfPairs) { pairIndex in
             if shuffledEmojis.indices.contains(pairIndex) {
                 return shuffledEmojis[pairIndex]
             } else {

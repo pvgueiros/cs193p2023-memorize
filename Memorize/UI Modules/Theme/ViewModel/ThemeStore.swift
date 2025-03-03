@@ -12,9 +12,11 @@ class ThemeStore: ObservableObject {
     
     let userDefaultsKey = "ThemeStore"
     
-    var themePresenters: [ThemePresenter] {
+    // TODO: - change themes so they can't be accessed directly - only through VM
+    
+    var themes: [Theme] {
         get {
-            UserDefaults.standard.themePresenters(forKey: userDefaultsKey)
+            UserDefaults.standard.themes(forKey: userDefaultsKey)
         }
         set {
             if !newValue.isEmpty {
@@ -25,36 +27,43 @@ class ThemeStore: ObservableObject {
     }
     
     init() {
-        if themePresenters.isEmpty {
-            let themes = Theme.builtins
-            for theme in themes {
-                themePresenters.append(ThemePresenter(theme: theme))
-            }
+        if themes.isEmpty {
+            themes = Theme.builtins
         }
     }
     
-    func indexOfThemePresenter(withId id: Theme.ID) -> Int? {
-        themePresenters.firstIndex { $0.id == id }
+    func colorFor(_ theme: Theme) -> Color {
+        Color(rgba: theme.colorRGBA)
     }
     
-    func indexOf(themePresenter: ThemePresenter) -> Int? {
-        themePresenters.firstIndex { $0 == themePresenter }
+    func titleFor(_ theme: Theme) -> String {
+        theme.title
+    }
+    
+    func subtitleFor(_ theme: Theme) -> String {
+        let numberOfPairs = theme.numberOfPairs
+        let numberOfPairsTitle = (numberOfPairs == theme.emojis.count) ? "All" : "\(numberOfPairs)"
+        return numberOfPairsTitle + " pairs from \(theme.emojis)"
+    }
+    
+    func indexOf(_ theme: Theme) -> Int? {
+        themes.firstIndex { $0.id == theme.id }
     }
 }
 
 extension UserDefaults {
     
-    func themePresenters(forKey key: String) -> [ThemePresenter] {
+    func themes(forKey key: String) -> [Theme] {
         if let jsonData = data(forKey: key),
-            let decodedObject = try? JSONDecoder().decode([ThemePresenter].self, from: jsonData) {
+            let decodedObject = try? JSONDecoder().decode([Theme].self, from: jsonData) {
             return decodedObject
         } else {
             return []
         }
     }
     
-    func set(_ themePresenters: [ThemePresenter], forKey key: String) {
-        let jsonData = try? JSONEncoder().encode(themePresenters)
+    func set(_ themes: [Theme], forKey key: String) {
+        let jsonData = try? JSONEncoder().encode(themes)
         set(jsonData, forKey: key)
     }
 }

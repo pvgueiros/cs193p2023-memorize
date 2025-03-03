@@ -35,7 +35,7 @@ struct Theme: Identifiable, Hashable, Codable {
               colorRGBA: RGBA(red: 0/255, green: 122/255, blue: 255/255, alpha: 1))
     ]
     
-    static private let minPairsOfCards: Int = 4
+    static let minPairsOfCards: Int = 4
     
     init(title: String, emojis: String, colorRGBA: RGBA) {
         self.title = title
