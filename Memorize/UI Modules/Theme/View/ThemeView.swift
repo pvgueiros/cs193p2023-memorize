@@ -5,8 +5,6 @@
 //  Created by Paula Vasconcelos Gueiros on 28/02/25.
 //
 
-// TODO: - prevent theme from having less than 4 emojis
-
 import SwiftUI
 
 struct ThemeView: View {
@@ -41,12 +39,13 @@ struct ThemeView: View {
     }
     
     private var titleSection: some View {
-        Section(AppText.title) {
+        Section(Constant.Text.title) {
             HStack {
-                TextField(AppText.themeTitle, text: $theme.title)
+                TextField(Constant.Text.themeTitle, text: $theme.title)
                     .font(Constant.Size.defaultFont)
                     .foregroundStyle(store.colorFor(theme))
                     .focused($focused, equals: .title)
+                    .layoutPriority(1)
                 ColorPicker("", selection: $selectedColor)
                     .onChange(of: selectedColor) { oldValue, newValue in
                         store.setColor(selectedColor, for: theme)
@@ -64,9 +63,9 @@ struct ThemeView: View {
     
     private var emojiSectionHeader: some View {
         HStack {
-            Text(AppText.emojiSectionTitle)
+            Text(Constant.Text.emojiSectionTitle)
             Spacer()
-            Text(AppText.emojiSectionSubtitle)
+            Text(Constant.Text.emojiSectionSubtitle)
         }
     }
     
@@ -83,9 +82,9 @@ struct ThemeView: View {
                     }
             }
         }
-        .simpleAlert(AppText.Error.minimumSetSizeReachedTitle,
+        .simpleAlert(Constant.Text.minimumSetSizeReachedTitle,
                      isPresented: $showMinimumSetSizeReached,
-                     message: AppText.Error.minimumSetSizeReachedMessage)
+                     message: Constant.Text.minimumSetSizeReachedMessage)
     }
     
     private func removeEmoji(_ emoji: String) {
@@ -101,7 +100,7 @@ struct ThemeView: View {
     @State private var newEmojis: String = ""
     
     private var newEmojisView: some View {
-        TextField(AppText.newEmojisPlaceholder, text: $newEmojis)
+        TextField(Constant.Text.newEmojisPlaceholder, text: $newEmojis)
             .onChange(of: newEmojis) { oldValue, newValue in
                 theme.emojis = (newValue + theme.emojis)
                     .filter { $0.isEmoji }
@@ -111,7 +110,7 @@ struct ThemeView: View {
     }
     
     private var sizeSection: some View {
-        Section(AppText.sizeSectionTitle) {
+        Section(Constant.Text.sizeSectionTitle) {
             Stepper(value: $theme.numberOfPairs, in: Theme.minPairsOfCards...theme.emojis.count) {
                 Text("\(theme.numberOfPairs) pairs")
             }
@@ -120,21 +119,21 @@ struct ThemeView: View {
     
     // MARK: - Constants
     
-    struct AppText {
-        static let title: String = "Title"
-        static let themeTitle: String = "Theme Title"
-        static let newEmojisPlaceholder: String = "New Emoji"
-        static let emojiSectionTitle: String = "Emoji Set"
-        static let emojiSectionSubtitle: String = "Tap to Remove"
-        static let sizeSectionTitle: String = "Size"
-        
-        struct Error {
+    struct Constant {
+        struct Text {
+            static let title: String = "Title"
+            static let themeTitle: String = "Theme Title"
+            
+            static let newEmojisPlaceholder: String = "New Emoji"
+            static let emojiSectionTitle: String = "Emoji Set"
+            static let emojiSectionSubtitle: String = "Tap to Remove"
+            
+            static let sizeSectionTitle: String = "Size"
+
             static let minimumSetSizeReachedTitle: LocalizedStringKey = "Minimum set size reached"
             static let minimumSetSizeReachedMessage: String = "You must not have fewer than 4 pairs of emoji. Add more emoji before removing this one."
         }
-    }
-    
-    struct Constant {
+        
         struct Size {
             static let emojiGrid: CGFloat = 35
             static let defaultFont: Font = .largeTitle
@@ -150,4 +149,5 @@ struct ThemeView: View {
     )
     
     ThemeView(theme: $theme)
+        .environmentObject(ThemeStore())
 }

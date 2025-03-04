@@ -5,16 +5,14 @@
 //  Created by Paula Vasconcelos Gueiros on 25/02/25.
 //
 
-// TODO: - check if makes sense that themes are accessed directly freely
-// TODO: - add access control
-// TODO: - add section marks
-
 import Foundation
 import SwiftUI
 
 class ThemeStore: ObservableObject {
     
-    let userDefaultsKey = "ThemeStore"
+    // MARK: - General Properties
+    
+    private let userDefaultsKey = "ThemeStore"
     
     var themes: [Theme] {
         get {
@@ -28,13 +26,15 @@ class ThemeStore: ObservableObject {
         }
     }
     
+    // MARK: - Initialization
+    
     init() {
         if themes.isEmpty {
             themes = Theme.builtins
         }
     }
     
-    // MARK: - Read-only Methods
+    // MARK: - Data Formatting
     
     func colorFor(_ theme: Theme) -> Color {
         Color(rgba: theme.colorRGBA)
@@ -50,6 +50,12 @@ class ThemeStore: ObservableObject {
         return numberOfPairsTitle + " pairs from \(theme.emojis)"
     }
     
+    // MARK: - Logic & Editing
+    
+    func themeAtIndex(_ index: Int) -> Theme {
+        themes[index]
+    }
+    
     func indexOf(_ theme: Theme) -> Int? {
         themes.firstIndex { $0.id == theme.id }
     }
@@ -57,8 +63,6 @@ class ThemeStore: ObservableObject {
     func canRemoveEmoji(from theme: Theme) -> Bool {
         theme.emojis.uniqued.count > Theme.minPairsOfCards
     }
-    
-    // MARK: - Mutating Methods
     
     func addTheme() -> Theme {
         let newTheme = Theme.defaultNewTheme

@@ -5,78 +5,132 @@
 //  Created by Paula Vasconcelos Gueiros on 25/02/25.
 //
 
-// TODO: - separate views into smaller vars/funcs
-// TODO: - add access control
-// TODO: - add section marks
-// TODO: - review constants
-// TODO: - consider changing selectedTheme to selectedThemeId
-// TODO: - consider switching to List(selection:
-// TODO: - add message when no selection
-
 import SwiftUI
 
 struct ThemeListView: View {
-    private let listItemSpacing: CGFloat = 5
+    
+    // MARK: - General Properties
     
     @EnvironmentObject var store: ThemeStore
-    @State var showThemeView: Bool = false
-    @State private var selectedTheme: Theme? {
+    
+    @State private var showThemeView: Bool = false
+    @State private var selectedThemeIdToPlay: Theme.ID?
+    @State private var selectedThemeToEdit: Theme? {
         didSet {
-            showThemeView = selectedTheme != nil
+            showThemeView = selectedThemeToEdit != nil
         }
     }
     
+    // MARK: - UI Body
+    
     var body: some View {
         NavigationSplitView {
-            List {
-                ForEach(store.themes) { theme in
-                    NavigationLink(value: theme) {
-                        VStack(alignment: .leading, spacing: listItemSpacing) {
-                            Text(store.titleFor(theme))
-                                .font(.title)
-                                .foregroundStyle(store.colorFor(theme))
-                            Text(store.subtitleFor(theme))
-                                .lineLimit(1)
-                        }
-                    }
-                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                        Button {
-                            selectedTheme = theme
-                        } label: {
-                            Image(systemName: "info.circle.fill")
-                        }
-                        .tint(.blue)
-                    }
-                }
-                .onDelete { indexSet in
-                    store.themes.remove(atOffsets: indexSet)
-                }
-                .onMove { indexSet, offset in
-                    store.themes.move(fromOffsets: indexSet, toOffset: offset)
-                }
-                
+            themeListView
+        } detail: {
+            detailView
+        }
+    }
+    
+    private var themeListView: some View {
+        themeList
+            .navigationTitle(Constant.Text.title)
+            .toolbar { addThemeButton }
+            .sheet(item: $selectedThemeToEdit) { theme in
+                themeView(for: theme)
             }
-            .toolbar {
-                Button {
-                    selectedTheme = store.addTheme()
-                } label: {
-                    Image(systemName: "plus")
+    }
+    
+    private var themeList: some View {
+        List(selection: $selectedThemeIdToPlay) {
+            ForEach(store.themes) { theme in
+                view(for: theme)
+                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                    editButton(for: theme)
                 }
             }
-            .navigationDestination(for: Theme.self) { theme in
-                let gameViewModel = EmojiMemoryGame(theme)
-                EmojiMemoryGameView(viewModel: gameViewModel)
+            .onDelete { indexSet in
+                store.themes.remove(atOffsets: indexSet)
             }
-            .sheet(item: $selectedTheme) { theme in
-                if let index = store.indexOf(theme) {
-                    ThemeView(theme: $store.themes[index])
-                }
+            .onMove { indexSet, offset in
+                store.themes.move(fromOffsets: indexSet, toOffset: offset)
             }
-            .navigationTitle("Theme List")
-        } detail: { }
+        }
+    }
+    
+    private func view(for theme: Theme) -> some View {
+        VStack(alignment: .leading, spacing: Constant.listItemSpacing) {
+            Text(store.titleFor(theme))
+                .font(.title)
+                .foregroundStyle(store.colorFor(theme))
+            Text(store.subtitleFor(theme))
+                .lineLimit(1)
+        }
+        .tag(theme.id)
+    }
+    
+    private var addThemeButton: some View {
+        Button {
+            selectedThemeToEdit = store.addTheme()
+        } label: {
+            Image(systemName: Constant.ImageName.addTheme)
+        }
+    }
+    
+    private func editButton(for theme: Theme) -> some View {
+        Button {
+            selectedThemeToEdit = theme
+        } label: {
+            Image(systemName: Constant.ImageName.editTheme)
+        }
+        .tint(.blue)
+    }
+    
+    // MARK: - Navigation
+    
+    @ViewBuilder
+    private var detailView: some View {
+        if let selectedThemeIdToPlay,
+           let selectedThemeToPlay = store.themes.first(where: { $0.id == selectedThemeIdToPlay }) {
+            memorizeGame(for: selectedThemeToPlay)
+        } else {
+            startStateView
+        }
+    }
+    
+    private func memorizeGame(for theme: Theme) -> some View {
+        let gameViewModel = EmojiMemoryGame(theme)
+        return EmojiMemoryGameView(viewModel: gameViewModel)
+    }
+    
+    private var startStateView: some View {
+        Text(Constant.Text.startStateMessage)
+    }
+    
+    @ViewBuilder
+    private func themeView(for theme: Theme) -> some View {
+        if let index = store.indexOf(theme) {
+            ThemeView(theme: $store.themes[index])
+        }
+    }
+    
+    // MARK: - Constants
+    
+    struct Constant {
+        static let listItemSpacing: CGFloat = 5
+        
+        struct Text {
+            static let title: String = "Themes"
+            static let startStateMessage: String = "Tap on the upper left corner icon to choose a theme"
+        }
+        
+        struct ImageName {
+            static let addTheme: String = "plus"
+            static let editTheme: String = "info.circle.fill"
+        }
     }
 }
 
-//#Preview {
-//    ThemeListView()
-//}
+#Preview {
+    ThemeListView()
+        .environmentObject(ThemeStore())
+}
