@@ -21,13 +21,14 @@ struct ThemeView: View {
     }
     @FocusState private var focused: Focused?
     
-    // MARK: - UI Body
+    // MARK: - Body Root
     
     var body: some View {
         Form {
             titleSection
             emojiSection
             sizeSection
+            trashSection
         }
         .onAppear {
             if theme.title.isEmpty { focused = .title }
@@ -37,6 +38,8 @@ struct ThemeView: View {
             theme.numberOfPairs = min(theme.numberOfPairs, theme.emojis.count)
         }
     }
+    
+    // MARK: - Title
     
     private var titleSection: some View {
         Section(Constant.Text.title) {
@@ -54,9 +57,11 @@ struct ThemeView: View {
         }
     }
     
+    // MARK: - Active Emoji
+    
     private var emojiSection: some View {
         Section(header: emojiSectionHeader) {
-            currentEmojiView
+            currentEmojisView
             newEmojisView
         }
     }
@@ -71,7 +76,7 @@ struct ThemeView: View {
     
     @State private var showMinimumSetSizeReached: Bool = false
     
-    private var currentEmojiView: some View {
+    private var currentEmojisView: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: Constant.Size.emojiGrid))]) {
             let emojiArray = theme.emojis.uniqued.map(String.init)
             ForEach(emojiArray, id: \.self) { emoji in
@@ -93,8 +98,11 @@ struct ThemeView: View {
             return
         }
         
-        theme.emojis.removeAll(emoji.first!)
-        newEmojis.removeAll(emoji.first!)
+        if let emojiChar = emoji.first {
+            newEmojis.removeAll(emojiChar)
+            theme.emojis.removeAll(emojiChar)
+            theme.removedEmojis = (theme.removedEmojis + [emojiChar]).uniqued
+        }
     }
     
     @State private var newEmojis: String = ""
@@ -109,12 +117,50 @@ struct ThemeView: View {
             .focused($focused, equals: .newEmojis)
     }
     
+    // MARK: - Size
+    
     private var sizeSection: some View {
         Section(Constant.Text.sizeSectionTitle) {
-            Stepper(value: $theme.numberOfPairs, in: Theme.minPairsOfCards...theme.emojis.count) {
+            Stepper(value: $theme.numberOfPairs, in: store.emojiSetRange(for: theme)) {
                 Text("\(theme.numberOfPairs) pairs")
             }
         }
+    }
+    
+    // MARK: - Removed Content
+    
+    @ViewBuilder
+    private var trashSection: some View {
+        if theme.hasRemovedContent {
+            Section(Constant.Text.trashSectionTitle) {
+                removedEmojisView
+                removedContentActions
+            }
+        }
+    }
+    
+    private var removedEmojisView: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: Constant.Size.emojiGrid))]) {
+            let removedEmojiArray = theme.removedEmojis.uniqued.map(String.init)
+            ForEach(removedEmojiArray, id: \.self) { emoji in
+                Text(emoji)
+                    .font(Constant.Size.defaultFont)
+            }
+        }
+    }
+    
+    private var removedContentActions: some View {
+        HStack {
+            Button(Constant.Text.restoreButtonTitle) {
+                theme.emojis = (theme.emojis + theme.removedEmojis).uniqued
+                theme.removedEmojis = ""
+            }
+            Spacer()
+            Button(Constant.Text.deleteButtonTitle, role: .destructive) {
+                theme.removedEmojis = ""
+            }
+        }
+        .buttonStyle(.borderless)
     }
     
     // MARK: - Constants
@@ -129,6 +175,10 @@ struct ThemeView: View {
             static let emojiSectionSubtitle: String = "Tap to Remove"
             
             static let sizeSectionTitle: String = "Size"
+            
+            static let trashSectionTitle: String = "Trash"
+            static let restoreButtonTitle: String = "Restore content"
+            static let deleteButtonTitle: String = "Delete forever"
 
             static let minimumSetSizeReachedTitle: LocalizedStringKey = "Minimum set size reached"
             static let minimumSetSizeReachedMessage: String = "You must not have fewer than 4 pairs of emoji. Add more emoji before removing this one."

@@ -60,10 +60,6 @@ class ThemeStore: ObservableObject {
         themes.firstIndex { $0.id == theme.id }
     }
     
-    func canRemoveEmoji(from theme: Theme) -> Bool {
-        theme.emojis.uniqued.count > Theme.minPairsOfCards
-    }
-    
     func addTheme() -> Theme {
         let newTheme = Theme.defaultNewTheme
         themes.append(newTheme)
@@ -75,9 +71,21 @@ class ThemeStore: ObservableObject {
             themes[index].colorRGBA = color.rgba
         }
     }
+    
+    // MARK: - Emoji Set Management
+    
+    func emojiSetRange(for theme: Theme) -> ClosedRange<Int> {
+        Theme.minPairsOfCards...theme.emojis.count
+    }
+    
+    func canRemoveEmoji(from theme: Theme) -> Bool {
+        theme.emojis.uniqued.count > Theme.minPairsOfCards
+    }
 }
 
 extension UserDefaults {
+    
+    // MARK: - Persistance
     
     func themes(forKey key: String) -> [Theme] {
         if let jsonData = data(forKey: key),

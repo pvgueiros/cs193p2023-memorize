@@ -8,15 +8,22 @@
 import Foundation
 
 struct Theme: Identifiable, Hashable, Codable {
+    var id: UUID = UUID()
+    
     var title: String
     var emojis: String
     var numberOfPairs: Int
     var colorRGBA: RGBA
-    var id: UUID = UUID()
+    
+    var removedEmojis: String
+    var hasRemovedContent: Bool {
+        !removedEmojis.isEmpty
+    }
     
     init(title: String, emojis: String, colorRGBA: RGBA) {
         self.title = title
         self.emojis = emojis
+        self.removedEmojis = ""
         self.numberOfPairs = Int.random(in: Self.minPairsOfCards...emojis.count)
         self.colorRGBA = colorRGBA
     }
