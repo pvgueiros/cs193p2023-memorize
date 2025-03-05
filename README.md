@@ -8,9 +8,14 @@ Memorize Game app using SwiftUI for class CS193P @ Stanford 2023
 * Required Tasks 1 - 12
 * Extra Credit 1 - 3
 
-
 ## Assignment 2
 ### Completed:
 
 * Required Tasks 1 - 12
 * Extra Credit 1, 2 & 4
+
+## Assignment 6
+### Completed:
+
+* Required Tasks 1 - 14
+* Extra Credit 1 - 2
